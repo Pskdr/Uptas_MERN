@@ -1,5 +1,6 @@
 import Usuario from "../models/Usuario.js";
 import generarId from "../helpers/generarId.js";
+import generarJWT from "../helpers/generarJWT.js";
 
 const registrar = async (req, res) => {
   //Evitando registros dupiclados
@@ -48,6 +49,7 @@ const autenticar = async (req, res) => {
       _id: usuario._id,
       nombre: usuario.nombre,
       email: usuario.email,
+      token: generarJWT(usuario._id),
     });
   } else {
     console.log("es incorrecto");
@@ -56,4 +58,11 @@ const autenticar = async (req, res) => {
   }
 };
 
-export { registrar, autenticar };
+const confirmar = async (req, res) => {
+  const { token } = req.params;
+  const usuarioConfirmar = await Usuario.findOne({ token });
+
+  console.log(usuarioConfirmar);
+};
+
+export { registrar, autenticar, confirmar };
